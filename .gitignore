@@ -1,6 +1,5 @@
 .
 node_modules/
 .env
-ocr_image_result.txt
-ocr_pdf_result.txt
+*_result.txt
 __pycache__/
