@@ -6,3 +6,9 @@ body {
 a {
   color: #00B7FF;
 }
+
+.signup-page {
+  width: 560px;
+  padding: 8% 0 0;
+  margin: auto;
+}
