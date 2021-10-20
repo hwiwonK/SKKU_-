@@ -11,6 +11,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.keyword.belongsTo(models.user, {
+        foreignKey: 'userId',
+        targetKey: 'googleid',
+        onDelete: 'cascade'
+      });
+
+      models.keyword.belongsTo(models.file, {
+        foreignKey: 'fileId',
+        targetKey: 'id',
+        onDelete: 'cascade'
+      });
     }
   };
   keyword.init({

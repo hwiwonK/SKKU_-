@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const keyword = require('./keyword');
 module.exports = (sequelize, DataTypes) => {
   class user extends Model {
     /**
@@ -11,6 +12,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.user.hasMany(models.file, {
+        foreignKey : 'userId',
+        sourceKey : 'googleid'
+      });
+      models.user.hasMany(models.folder, {
+        foreignKey : 'userId',
+        sourceKey : 'googleid'
+      });
+      models.user.hasMany(models.keyword, {
+        foreignKey : 'userId',
+        sourceKey : 'googleid'
+      });
     }
   };
   user.init({

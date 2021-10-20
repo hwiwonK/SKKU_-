@@ -11,6 +11,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      models.file.hasMany(models.keyword, {
+        foreignKey : 'fileId',
+        sourceKey : 'id'
+      });
+
+      models.file.belongsTo(models.user, {
+        foreignKey: 'userId',
+        targetKey : 'googleid',
+        onDelete: 'cascade'
+      });
+
+      models.file.belongsTo(models.folder, {
+        foreignKey: 'folderId',
+        targetKey : 'id',
+        onDelete: 'cascade'
+      });
     }
   };
   file.init({
