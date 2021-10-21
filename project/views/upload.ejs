@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Upload page</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>upload page</h1>
+    <p>
+      <form method= "post" enctype="multipart/form-data" action="/upload/process">
+        <select class="selectFolder" name="selectFolder">
+          <% for(let folder of folders) { %>
+            <option value= "<%= folder.id %>"> <%= folder.foldername %> </option>
+          <% } %>
+        </select>
+        <input type="file" name="file">
+        <input type="submit" name="submit" value="File Upload">
+      
+      </form>
+
+    </p>
+
+  </body>
+</html>
