@@ -4,3 +4,5 @@ node_modules/
 *_result.txt
 __pycache__/
 migrations/
+ocr_image_result.txt
+ocr_pdf_result.txt
