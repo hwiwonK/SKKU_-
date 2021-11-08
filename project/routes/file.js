@@ -42,8 +42,8 @@ router.get('/', async function(req, res, next) {
   // console.log(req.session.passport.user);
   // console.log("폴더 정보");
   // console.log(folderList);
-  // console.log("파일 정보");
-  // console.log(fileList);
+  console.log("파일 정보");
+  console.log(fileList);
 
   res.render('file', { 
     title: 'Express',
@@ -73,12 +73,35 @@ router.get('/delete', async function(req, res, next) {
 
 
 //키워드 검색
-router.get('/search', function(req, res, next) {
+router.post('/search', async function(req, res, next) {
   console.log("키워드 검색");
 
-  res.render('file', {
+  console.log(req.body.query);
+
+  var fileList = await file.findAll({
+    where: {
+      userId: req.session.passport.user
+    },
+    include: [{
+      model: keyword, 
+      where: {
+        keywordname: req.body.query
+      }
+    }]
+  });
+
+
+  //폴더 목록 가져오기
+  var folderList = await folder.findAll({
+    where: {userId: req.session.passport.user}
+  });
+
+
+  res.render('file', { 
     title: 'Express',
-  })
+    folders: folderList,
+    files: fileList //키워드 정보도 함께
+  });
 })
 
 module.exports = router;
