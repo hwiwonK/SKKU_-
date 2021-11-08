@@ -6,15 +6,19 @@ const { format, callbackify } = require("util");
 const {folder, file, keyword} = require('../models');
 const {Storage} = require('@google-cloud/storage');
 const path = require("path");
+const {spawn} = require('child_process');
+const { PythonShell } = require('python-shell');
 
-function callback(cb){
-  cb();
-}
+
+// function callback(cb){
+//   cb();
+// }
 
 var multer = Multer({
   storage: Multer.memoryStorage()
 });
 
+// var spawn = require('child_process').spawn;
 
 
 /* GET upload page. */
@@ -54,8 +58,12 @@ router.post('/process', multer.single('file'), async function(req, res, next){
   const storage = new Storage();
   const bucket = storage.bucket('graduation_bucket');
 
+  // 앞으로 사용할 전역변수
   var uploadedFileId;
   var extension;
+  var uploadedFilename;
+  var curUserid;
+  var keywordArr;
   
   console.log('1번 완료');
 
@@ -67,7 +75,7 @@ router.post('/process', multer.single('file'), async function(req, res, next){
     resumable: false,
   });
 
-  console.log(blobStream);
+  // console.log(blobStream);
 
   console.log('blob 정보'); //blob 확인 완료
 
@@ -75,6 +83,57 @@ router.post('/process', multer.single('file'), async function(req, res, next){
     console.log(err);
   });
 
+
+  async function keywordExtract() {
+    console.log("키워드 추출 시작");
+    return new Promise((resolve, reject) => {
+      let results;
+      let options = {
+        mode : 'text',
+        pythonPath : '/Library/Frameworks/Python.framework/Versions/3.9/bin/python3',
+        pythonOptions : ['-u'],
+        scriptPath : '',
+        args : [uploadedFilename, extension, curUserid],
+      };
+
+      PythonShell.run('main.py', options, function(err, results) {
+        if (err) {
+          console.log(err);
+          reject(err);
+        }
+        console.log(results);
+        keywordArr = results;
+        console.log(results[0]);
+        resolve(results);
+        keywordToTable();
+      });
+
+    });
+  }
+
+  //키워드 추출 끝난 후에 디비 저장 시작
+
+
+
+  //키워드 테이블에 저장하는 함수
+  function keywordToTable(){
+
+    console.log("테이블 저장 시작");
+
+    arrLen = keywordArr.length;
+
+    for (var i=0; i < arrLen; i++){
+      keyword.create({
+        keywordname : keywordArr[i],
+        fileId : uploadedFileId,
+        userId : req.session.passport.user
+      });
+    }
+
+  }
+
+
+  //함수 바로 실행
   blobStream.on('finish', async (data) => {
     // The public URL can be used to directly access the file via HTTP.
     
@@ -88,13 +147,6 @@ router.post('/process', multer.single('file'), async function(req, res, next){
     console.log(req.body.selectFolder);
     console.log(publicUrl);
 
-    // var uploadedFile = await file.create({
-    //   filename: req.file.originalname,
-    //   fileurl: publicUrl,
-    //   userId: req.session.passport.user,
-    //   folderId: req.body.selectFolder
-    // });
-
     const [user_result, created] = await file.findOrCreate({
       where : {
         filename: req.file.originalname,
@@ -103,65 +155,25 @@ router.post('/process', multer.single('file'), async function(req, res, next){
         folderId: req.body.selectFolder}
       }
     );
-
     // console.log(user_result);
     
     uploadedFileId = user_result.id;
     extension = path.extname(req.file.originalname);
-
-    // console.log(uploadedFileId);
-    // console.log(extension);
-
-    callback(keywordTable);
+    uploadedFilename = req.file.originalname;
+    curUserid = req.session.passport.user;
+    
+    console.log("파일 올리기 함수에서 진행 완료")
+    console.log(uploadedFileId);
+    console.log(extension);
+    
+    keywordExtract();
   
   });
 
-
-  //저장된 파일에 대해 ocr, 키워드 추출 진행
-  //python 실행
-
-
-  function keywordTable(){
-    console.log(uploadedFileId);
-    console.log(extension);
-
-    keyword.create({
-      keywordname : 'hello',
-      fileId : uploadedFileId,
-      userId : req.session.passport.user
-    });
-
-    keyword.create({
-      keywordname : 'hello2',
-      fileId : uploadedFileId,
-      userId : req.session.passport.user
-    });
-
-    keyword.create({
-      keywordname : 'hello3',
-      fileId : uploadedFileId,
-      userId : req.session.passport.user
-    });
-
-    keyword.create({
-      keywordname : 'hello4',
-      fileId : uploadedFileId,
-      userId : req.session.passport.user
-    });
-
-    keyword.create({
-      keywordname : 'hello5',
-      fileId : uploadedFileId,
-      userId : req.session.passport.user
-    });
-  }
-
-
-  //추출된 키워드 테이블에 저장(req.), file id, user id 정보 활용
-
-
-
+  //앞선 함수 다 끝날 때까지 여기는 실행 안됨
   blobStream.end(req.file.buffer);
+  
+  
   //메인 페이지로 이동
   res.render('file', {title : 'Express'});
 })

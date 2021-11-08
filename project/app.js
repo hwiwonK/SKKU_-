@@ -111,7 +111,7 @@ app.use('/', loginRouter);
 app.use('/login', loginRouter);
 app.use('/file', authenticateUser, fileRouter); //나중에 이걸로 바꾸기
 app.use('/upload', authenticateUser, uploadRouter); //나중에 이걸로 바꾸기
-
+// app.use('/folder', authenticateUser, folderRouter); //폴더 생성
 
 // app.use('/users', usersRouter);
 
