@@ -8,56 +8,60 @@ const {file, folder, keyword} = require('../models');
 //모든 파일 정보
 router.get('/', async function(req, res, next) {
 
+  console.log(req.query.folderId);
+
   //전체 파일 목록 가져오기(userId) - 키워드도 함께
-  // if (req.body.selectFolder == undefined || req.body.selectFolder == ""){
+  if (req.query.folderId == undefined || req.query.folderId == ""){
 
-  //   var fileList = await file.findAll({
-  //     where: {
-  //       userId: req.session.passport.user
-  //     }
-  //   });
-
-  //   if (fileList) {
-  //     for(let file of fileList){
-  //       let result = await file.findOne({
-  //         include: {
-  //           model : keyword,
-  //           where : {
-  //             fileId : file.id
-  //           }
-  //         }
-  //       });
-  //       //키워드 같이 묶어주기
-  //       file.keywords = result.keywords;
-  //     }
-  //   }
+    var fileList = await file.findAll({
+      where: {
+        userId: req.session.passport.user
+      }
+    });
 
 
-  // } else { //해당 폴더 파일 목록 가져오기(userId, folderId) - 키워드도 함께
-  //   var selectedFolder = req.body.selectFolder; //선택한 폴더의 folderId
+    // findOne is not a function
+    // if (fileList) {
+    //   for(let file of fileList){
+    //     let result = await file.findOne({
+    //       include: {
+    //         model : keyword,
+    //         where : {
+    //           fileId : file.id
+    //         }
+    //       }
+    //     });
+    //     //키워드 같이 묶어주기
+    //     file.keywords = result.keywords;
+    //   }
+    // }
 
-  //   var fileList = await folder.findAll({
-  //     where: {
-  //       userId: req.session.passport.user,
-  //       folderId: selectedFolder
-  //     }
-  //   });
 
-  //   if (fileList) {
-  //     for(let files of fileList){
-  //       let result = await file.findOne({
-  //         include: {
-  //           model : keyword,
-  //           where : {
-  //             fileId : files.id
-  //           }
-  //         }
-  //       })
-  //       //키워드 같이 묶어주기
-  //       file.keywords = result.keywords;
-  //     }
-  //   }
-  // }
+  } else { //해당 폴더 파일 목록 가져오기(userId, folderId) - 키워드도 함께
+    var selectedFolder = req.query.folderId; //선택한 폴더의 folderId
+
+    var fileList = await file.findAll({
+      where: {
+        userId: req.session.passport.user,
+        folderId: selectedFolder
+      }
+    });
+
+    // if (fileList) {
+    //   for(let files of fileList){
+    //     let result = await file.findOne({
+    //       include: {
+    //         model : keyword,
+    //         where : {
+    //           fileId : files.id
+    //         }
+    //       }
+    //     })
+    //     //키워드 같이 묶어주기
+    //     file.keywords = result.keywords;
+    //   }
+    // }
+  }
 
   //폴더 목록 가져오기
   var folderList = await folder.findAll({
@@ -65,12 +69,16 @@ router.get('/', async function(req, res, next) {
   });
 
   console.log(req.session.passport.user);
+  console.log(folderList);
+  console.log(fileList);
+
   res.render('file', { 
     title: 'Express',
     folders: folderList,
-    // files: fileList //키워드 정보도 함께
+    files: fileList //키워드 정보도 함께
   });
 });
+
 
 
 

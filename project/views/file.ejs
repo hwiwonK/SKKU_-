@@ -15,6 +15,26 @@
 
     
 
+    <tr>
+      <td><a href="/file">전체 폴더</a></td>
+    </tr>
+    <% for(let folder of folders) { %>
+      <tr>
+        <td width><a href="/file?folderId=<%= folder.id %>"><%= folder.foldername %></a></td>
+      </tr>
+    <% } %>
+
+
+    <!-- 파일 목록 보여주기 -->
+    <% for(let file of files) { %>
+      <tr>
+        <td><a href="<%=file.fileurl%>"><%=file.filename %></a></td>
+        <!-- <td width="20%"><%=file.createdAt %></td> -->
+      </tr>
+    <% } %>
+
+
+
     <form action="/search" method="get">
       <input type="text" name="query" placeholder="키워드를 입력하세요.">
       <input type="submit" value="Search" >
