@@ -14,24 +14,29 @@
     <button type = "button" id="btn_folder_new">폴더 추가</button>
 
     
-
-    <tr>
-      <td><a href="/file">전체 폴더</a></td>
-    </tr>
-    <% for(let folder of folders) { %>
+    
+    <table border="1px">
       <tr>
-        <td width><a href="/file?folderId=<%= folder.id %>"><%= folder.foldername %></a></td>
+        <td><a href="/file">전체 폴더</a></td>
+      <% for(let folder of folders) { %>
+          <td width><a href="/file?folderId=<%= folder.id %>"><%= folder.foldername %></a></td>
+      <% } %>
       </tr>
-    <% } %>
-
+    </table>
 
     <!-- 파일 목록 보여주기 -->
-    <% for(let file of files) { %>
-      <tr>
-        <td><a href="<%=file.fileurl%>"><%=file.filename %></a></td>
-        <!-- <td width="20%"><%=file.createdAt %></td> -->
-      </tr>
-    <% } %>
+    <table border="1px">
+      <% for(let file of files) { %>
+        <tr>
+          <td><a href="<%=file.fileurl%>"><%=file.filename %></a></td>
+          <!-- <td width="20%"><%=file.createdAt %></td> -->
+          <td><%=file.id%></td>
+          <% for(let keyword of file.keywords) { %>
+            <td><%=keyword.keywordname%></td>
+          <% } %>
+        </tr>
+      <% } %>
+    </table>
 
 
 

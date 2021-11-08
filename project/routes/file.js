@@ -16,25 +16,9 @@ router.get('/', async function(req, res, next) {
     var fileList = await file.findAll({
       where: {
         userId: req.session.passport.user
-      }
+      },
+      include: keyword
     });
-
-
-    // findOne is not a function
-    // if (fileList) {
-    //   for(let file of fileList){
-    //     let result = await file.findOne({
-    //       include: {
-    //         model : keyword,
-    //         where : {
-    //           fileId : file.id
-    //         }
-    //       }
-    //     });
-    //     //키워드 같이 묶어주기
-    //     file.keywords = result.keywords;
-    //   }
-    // }
 
 
   } else { //해당 폴더 파일 목록 가져오기(userId, folderId) - 키워드도 함께
@@ -44,32 +28,20 @@ router.get('/', async function(req, res, next) {
       where: {
         userId: req.session.passport.user,
         folderId: selectedFolder
-      }
+      },
+      include: keyword
     });
-
-    // if (fileList) {
-    //   for(let files of fileList){
-    //     let result = await file.findOne({
-    //       include: {
-    //         model : keyword,
-    //         where : {
-    //           fileId : files.id
-    //         }
-    //       }
-    //     })
-    //     //키워드 같이 묶어주기
-    //     file.keywords = result.keywords;
-    //   }
-    // }
   }
 
   //폴더 목록 가져오기
   var folderList = await folder.findAll({
     where: {userId: req.session.passport.user}
   });
-
+  console.log("유저 정보");
   console.log(req.session.passport.user);
+  console.log("폴더 정보");
   console.log(folderList);
+  console.log("파일 정보");
   console.log(fileList);
 
   res.render('file', { 

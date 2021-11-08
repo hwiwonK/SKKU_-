@@ -175,7 +175,8 @@ router.post('/process', multer.single('file'), async function(req, res, next){
   
   
   //메인 페이지로 이동
-  res.render('file', {title : 'Express'});
+  // res.render('file');
+  res.redirect('/file');
 })
 
 
