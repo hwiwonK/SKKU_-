@@ -37,12 +37,13 @@ router.get('/', async function(req, res, next) {
   var folderList = await folder.findAll({
     where: {userId: req.session.passport.user}
   });
-  console.log("유저 정보");
-  console.log(req.session.passport.user);
-  console.log("폴더 정보");
-  console.log(folderList);
-  console.log("파일 정보");
-  console.log(fileList);
+
+  // console.log("유저 정보");
+  // console.log(req.session.passport.user);
+  // console.log("폴더 정보");
+  // console.log(folderList);
+  // console.log("파일 정보");
+  // console.log(fileList);
 
   res.render('file', { 
     title: 'Express',
@@ -51,6 +52,23 @@ router.get('/', async function(req, res, next) {
   });
 });
 
+
+//파일 삭제
+router.get('/delete', async function(req, res, next) {
+  console.log(req.query.fileId);
+  console.log("파일 삭제");
+
+  var deletedFile = await file.destroy({
+    where: {
+      id: req.query.fileId
+    }
+  });
+
+  console.log(deletedFile);
+
+  res.redirect('/file');
+
+})
 
 
 

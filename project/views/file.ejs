@@ -34,6 +34,7 @@
           <% for(let keyword of file.keywords) { %>
             <td><%=keyword.keywordname%></td>
           <% } %>
+          <td width><a href="/file/delete?fileId=<%= file.id %>"><button type="button" class="btn btn-primary btn-lg">X</button></a></td>
         </tr>
       <% } %>
     </table>
