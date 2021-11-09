@@ -11,7 +11,7 @@
     <a href="/upload"><button type="button" class="btn btn-primary btn-lg">upload file</button></a>
 
     <!--폴더 생성 버튼-->
-    <button type = "button" id="btn_folder_new">폴더 추가</button>
+    <button type = "button" id="btn_folder_new" onclick="createFolder()">폴더 추가</button>
 
     
     
@@ -47,9 +47,30 @@
       <input type="submit" value="Search" >
     </form>
 
-
     
 
+    <script>
+
+      const {folder} = require('../models');
+      var folderName = "";
+
+      function createFolder(){
+        console.log("button click");
+
+        try{ //ok 버튼 클릭
+          folderName = prompt("폴더의 이름을 입력해주세요", "무제");
+          console.log(folderName);
+
+        } catch(error){ //cancel 버튼 클릭
+            console.log('Canceled');
+        }
+
+        //폴더 생성 프로세스 시작
+        window.location.replace("/file/folder?foldername=" + folderName);
+
+      }
+
+    </script>
 
 
     <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->

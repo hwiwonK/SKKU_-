@@ -4,6 +4,7 @@ var router = express.Router();
 const {file, folder, keyword} = require('../models');
 
 
+
 /* GET home page. */
 //모든 파일 정보
 router.get('/', async function(req, res, next) {
@@ -48,7 +49,7 @@ router.get('/', async function(req, res, next) {
   res.render('file', { 
     title: 'Express',
     folders: folderList,
-    files: fileList //키워드 정보도 함께
+    files: fileList, //키워드 정보도 함께
   });
 });
 
@@ -100,8 +101,35 @@ router.post('/search', async function(req, res, next) {
   res.render('file', { 
     title: 'Express',
     folders: folderList,
-    files: fileList //키워드 정보도 함께
+    files: fileList, //키워드 정보도 함께
   });
 })
+
+
+router.get('/folder', async function(req, res, next){
+  console.log("폴더 생성");
+
+  console.log(req.query.foldername);
+
+  const [folder_result, created] = await folder.findOrCreate({
+      where : {
+          foldername: req.query.foldername,
+          userId: req.session.passport.user
+      }
+  });
+  console.log(folder_result);
+
+  if (created) {
+      console.log("폴더 생성이 완료되었습니다.");
+  } else {
+      console.log("이미 존재하는 폴더입니다.");
+  }
+
+  res.redirect('/file');
+
+})
+
+
+
 
 module.exports = router;

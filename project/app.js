@@ -11,6 +11,8 @@ var uploadRouter = require('./routes/upload');
 
 var app = express();
 
+// app.use(express.static(path.join(__dirname, 'public')));
+
 //환경 변수 불러오기
 const env = process.env;
 
