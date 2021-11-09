@@ -14,6 +14,8 @@ router.get('/', async function(req, res, next) {
   //전체 파일 목록 가져오기(userId) - 키워드도 함께
   if (req.query.folderId == undefined || req.query.folderId == ""){
 
+    var selectedFolder = "전체 폴더";
+
     var fileList = await file.findAll({
       where: {
         userId: req.session.passport.user
@@ -22,13 +24,15 @@ router.get('/', async function(req, res, next) {
     });
 
 
-  } else { //해당 폴더 파일 목록 가져오기(userId, folderId) - 키워드도 함께
-    var selectedFolder = req.query.folderId; //선택한 폴더의 folderId
+  } else { //해당 폴더 파일 목록 가져오기(userId, folderName) - 키워드도 함께
+    var selectedFolderId = req.query.folderId; //선택한 폴더의 folderId
+
+    var selectedFolder = req.query.folderName;
 
     var fileList = await file.findAll({
       where: {
         userId: req.session.passport.user,
-        folderId: selectedFolder
+        folderId: selectedFolderId
       },
       include: keyword
     });
@@ -45,11 +49,13 @@ router.get('/', async function(req, res, next) {
   // console.log(folderList);
   console.log("파일 정보");
   console.log(fileList);
+  console.log(selectedFolder);
 
   res.render('file', { 
     title: 'Express',
     folders: folderList,
     files: fileList, //키워드 정보도 함께
+    selectedFolder: selectedFolder
   });
 });
 
@@ -102,6 +108,7 @@ router.post('/search', async function(req, res, next) {
     title: 'Express',
     folders: folderList,
     files: fileList, //키워드 정보도 함께
+    selectedFolder: "전체 폴더"
   });
 })
 
