@@ -8,6 +8,7 @@ var fileRouter = require('./routes/file');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 var uploadRouter = require('./routes/upload');
+var testRouter = require('./routes/test');
 
 var app = express();
 
@@ -105,6 +106,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
+app.use('/test', testRouter);
 
 
 // app.use('/', indexRouter);

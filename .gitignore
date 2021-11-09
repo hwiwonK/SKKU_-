@@ -6,3 +6,5 @@ __pycache__/
 migrations/
 ocr_image_result.txt
 ocr_pdf_result.txt
+test.ejs
+test.js
