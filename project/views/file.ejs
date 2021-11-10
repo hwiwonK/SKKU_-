@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <% include ./head %>
+
+  </head>
+
+  
+
+  <!-- <container> -->
+    <body class="d-flex h-100 text-center">
+
+        
+    
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        
+        <% include ./header %>
+        
+        <br><br><br>
+
+        <div class="d-flex flex-row" style = "height: 37px; text-align : left">
+          <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+            <div class="btn-group" role="group">
+              <button id="btnGroupDrop1" type="button" class="btn btn-success dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= selectedFolder %>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <li><a class="dropdown-item" href="/file">전체 폴더</a></li>
+                <% for(let folder of folders) { %>
+                  <li><a class="dropdown-item" href="/file?folderId=<%= folder.id %>&folderName=<%= folder.foldername%>"><%= folder.foldername %></a></li>
+                <% } %>
+              </ul>
+            </div>
+
+            <button type="button" id="btn_folder_new" class="btn btn-outline-success" onclick="createFolder()">Create Folder</button>
+            <a href="/upload"><button type="button" class="btn btn-outline-success">Upload File</button></a>
+            
+          
+          </div>
+
+          <div style = "width: 2%"></div>
+          <div class="input-group mb-3" style = "width : 25%">
+            <form action="/file/search" method="post" class="d-flex flex-row">
+            <input type="text" name="query" class="form-control" placeholder="keyword" aria-label="Recipient's username" aria-describedby="button-addon2">
+            <button class="btn btn-outline-success" type="submit" id="button-addon2">Search</button>
+            </form>
+          </div>
+
+        </div>
+        
+        <br><br>
+
+        <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th scope="col">File Name</th>
+                <th scope="col">Keywords</th>
+                <th scope="col">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% for(let file of files) { %>
+                <tr>
+                  <td><a href="<%=file.fileurl%>"><%=file.filename %></a></td>
+                  <td>
+                    <% for(let keyword of file.keywords) { %>
+                      <%=keyword.keywordname%>
+                    <% } %>
+                  </td>
+                  <td><a href="/file/delete?fileId=<%= file.id %>"><button type="button" class="btn-close" aria-label="Close"></button></a></td>
+                </tr>
+              <% } %>
+            </tbody>
+          </table>
+
+        
+
+        </div>
+
+        <script>
+
+          const {folder} = require('../models');
+          var folderName = "";
+    
+          function createFolder(){
+            console.log("button click");
+    
+            try{ //ok 버튼 클릭
+              folderName = prompt("폴더의 이름을 입력해주세요", "무제");
+              console.log(folderName);
+    
+            } catch(error){ //cancel 버튼 클릭
+                console.log('Canceled');
+            }
+    
+            //폴더 생성 프로세스 시작
+            window.location.replace("/file/folder?foldername=" + folderName);
+    
+          }
+    
+        </script>
+
+        <!-- Optional JavaScript; choose one of the two! -->
+
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    </body>
+  <!-- </container> -->
+</html>

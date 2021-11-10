@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <% include ./head %>
+
+  </head>
+
+  
+
+  <!-- <container> -->
+    <body class="d-flex h-100 text-center">
+
+        
+    
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" style="text-align: center;">
+        
+        <% include ./header %>
+        <br><br><br>
+        <br><br>
+        <main class="px-3">
+          <h1>Upload Your File!</h1>
+          <br>
+          <p class="lead">원하는 모든 파일을 업로드하세요!</p>
+          <p class="lead">pdf, image 등 모든 파일을 업로드할 수 있습니다. <br> 파일을 업로드하고 키워드를 추출하세요.</p>
+          <p class="lead">
+          </p>
+        </main>
+        <form method="post" enctype="multipart/form-data" action="/upload/process">
+        <div class="d-flex flex-row">
+
+          <div style = "width : 29%"></div>
+          <div class="input-group mb-3 column align-items-center" style="width: 40%">
+
+            <label class="input-group-text" for="inputGroupSelect01">Folder</label>
+            <select class="form-select" name="selectFolder" id="inputGroupSelect01">
+              <% for(let folder of folders) { %>
+                <option value= "<%= folder.id %>"> <%= folder.foldername %> </option>
+              <% } %>
+            </select>
+          </div>
+        </div>
+
+        <div class="d-flex flex-row">
+          <div style = "width : 29%"></div>
+          <div class="input-group mb-3" style="width : 40%">
+            <input type="file" name="file" class="form-control" id="inputGroupFile02">
+            <button class="btn btn-success" type="submit" for="inputGroupFile02">Upload</button>
+          </div>
+        </div>
+
+        </form>
+
+        
+
+      
+
+        
+
+        </div>
+
+        <!-- Optional JavaScript; choose one of the two! -->
+
+        <!-- Option 1: Bootstrap Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    </body>
+  <!-- </container> -->
+</html>
